@@ -1,0 +1,32 @@
+{
+  "general": {
+    "max_clients": 150,
+    "max_queue_size": 25
+  },
+  "client_generator": {
+    "mean_arrival_time": 1.0,
+    "stddev_arrival_time": 0.5
+  },
+  "columns": {
+    "column_76_1": {
+      "mean_service_time": 3.0,
+      "stddev_service_time": 1.0
+    },
+    "column_76_2": {
+      "mean_service_time": 3.0,
+      "stddev_service_time": 1.0
+    },
+    "column_92_1": {
+      "mean_service_time": 4.0,
+      "stddev_service_time": 1.5
+    },
+    "column_92_2": {
+      "mean_service_time": 4.0,
+      "stddev_service_time": 1.5
+    },
+    "column_95_1": {
+      "mean_service_time": 5.0,
+      "stddev_service_time": 2.0
+    }
+  }
+}

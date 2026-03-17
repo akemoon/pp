@@ -1,10 +1,16 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
+CPPC = g++
+CPPFLAGS = -std=c++23
+
 all: race
 
-race: race.c
-	$(CC) $(CFLAGS) -o race race.c
+racesem: race.c
+	$(CC) $(CFLAGS) -o racesem race.c
+
+racesig: race.cpp
+	$(CPPC) $(CPPFLAGS) -o racesig race.cpp
 
 clean:
-	rm -f race
+	rm -f race*

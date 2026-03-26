@@ -1,0 +1,178 @@
+@startdot
+digraph MatMulV2 {
+  graph [layout=neato, splines=ortho, bgcolor=white, overlap=false];
+  node  [fontsize=8];
+  edge  [fontsize=7, arrowsize=0.55];
+
+  // ============================================================
+  // TOP GRID: распределение данных
+  // ============================================================
+
+  node [shape=box, style="rounded,filled", fillcolor="#fffacd",
+        width=1.7, height=0.8, fixedsize=true];
+
+  D0  [label="A_{0,0} от P0\nB_{*,j} от P0, B_{0,j} от P0\n∀j∈{0,...,5}", pos="0,12!"];
+  D1  [label="A_{0,1} от P0\nB_{1,j} от P0\n∀j∈{0,...,5}", pos="2.5,12!"];
+  D2  [label="A_{0,2} от P0\nB_{2,j} от P0\n∀j∈{0,...,5}", pos="5,12!"];
+  D3  [label="A_{0,3} от P0\nB_{3,j} от P0\n∀j∈{0,...,5}", pos="7.5,12!"];
+  D4  [label="A_{0,4} от P0\nB_{4,j} от P0\n∀j∈{0,...,5}", pos="10,12!"];
+
+  D5  [label="A_{1,0} от P0\nB_{*,j} от P0, B_{0,j} от P5\n∀j∈{0,...,5}", pos="0,8.8!"];
+  D6  [label="A_{1,1} от P0\nB_{1,j} от P5\n∀j∈{0,...,5}", pos="2.5,8.8!"];
+  D7  [label="A_{1,2} от P0\nB_{2,j} от P5\n∀j∈{0,...,5}", pos="5,8.8!"];
+  D8  [label="A_{1,3} от P0\nB_{3,j} от P5\n∀j∈{0,...,5}", pos="7.5,8.8!"];
+  D9  [label="A_{1,4} от P0\nB_{4,j} от P5\n∀j∈{0,...,5}", pos="10,8.8!"];
+
+  D10 [label="A_{2,0} от P0\nB_{*,j} от P0, B_{0,j} от P10\n∀j∈{0,...,5}", pos="0,5.6!"];
+  D11 [label="A_{2,1} от P0\nB_{1,j} от P10\n∀j∈{0,...,5}", pos="2.5,5.6!"];
+  D12 [label="A_{2,2} от P0\nB_{2,j} от P10\n∀j∈{0,...,5}", pos="5,5.6!"];
+  D13 [label="A_{2,3} от P0\nB_{3,j} от P10\n∀j∈{0,...,5}", pos="7.5,5.6!"];
+  D14 [label="A_{2,4} от P0\nB_{4,j} от P10\n∀j∈{0,...,5}", pos="10,5.6!"];
+
+  D15 [label="A_{3,0} от P0\nB_{*,j} от P0, B_{0,j} от P15\n∀j∈{0,...,5}", pos="0,2.4!"];
+  D16 [label="A_{3,1} от P0\nB_{1,j} от P15\n∀j∈{0,...,5}", pos="2.5,2.4!"];
+  D17 [label="A_{3,2} от P0\nB_{2,j} от P15\n∀j∈{0,...,5}", pos="5,2.4!"];
+  D18 [label="A_{3,3} от P0\nB_{3,j} от P15\n∀j∈{0,...,5}", pos="7.5,2.4!"];
+  D19 [label="A_{3,4} от P0\nB_{4,j} от P15\n∀j∈{0,...,5}", pos="10,2.4!"];
+
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.6, height=0.6, fixedsize=true, fontsize=9];
+
+  P0  [label="P0",  pos="0,10.5!"];
+  P1  [label="P1",  pos="2.5,10.5!"];
+  P2  [label="P2",  pos="5,10.5!"];
+  P3  [label="P3",  pos="7.5,10.5!"];
+  P4  [label="P4",  pos="10,10.5!"];
+
+  P5  [label="P5",  pos="0,7.3!"];
+  P6  [label="P6",  pos="2.5,7.3!"];
+  P7  [label="P7",  pos="5,7.3!"];
+  P8  [label="P8",  pos="7.5,7.3!"];
+  P9  [label="P9",  pos="10,7.3!"];
+
+  P10 [label="P10", pos="0,4.1!"];
+  P11 [label="P11", pos="2.5,4.1!"];
+  P12 [label="P12", pos="5,4.1!"];
+  P13 [label="P13", pos="7.5,4.1!"];
+  P14 [label="P14", pos="10,4.1!"];
+
+  P15 [label="P15", pos="0,0.9!"];
+  P16 [label="P16", pos="2.5,0.9!"];
+  P17 [label="P17", pos="5,0.9!"];
+  P18 [label="P18", pos="7.5,0.9!"];
+  P19 [label="P19", pos="10,0.9!"];
+
+  // бокс -> процесс (что получает процесс)
+  edge [color=gray, penwidth=0.6, style=dotted, arrowsize=0.5, arrowhead=normal];
+  D0->P0;   D1->P1;   D2->P2;   D3->P3;   D4->P4;
+  D5->P5;   D6->P6;   D7->P7;   D8->P8;   D9->P9;
+  D10->P10; D11->P11; D12->P12; D13->P13; D14->P14;
+  D15->P15; D16->P16; D17->P17; D18->P18; D19->P19;
+
+  // MPI_Scatter(A): P0 -> каждый напрямую
+  edge [color=blue, penwidth=1.3, style=solid, arrowsize=0.9, arrowhead=normal];
+  P0->P1  [label="scatter A"];
+  P0->P2;
+  P0->P3;
+  P0->P4;
+  P0->P5;
+  P0->P6;
+  P0->P7;
+  P0->P8;
+  P0->P9;
+  P0->P10;
+  P0->P11;
+  P0->P12;
+  P0->P13;
+  P0->P14;
+  P0->P15;
+  P0->P16;
+  P0->P17;
+  P0->P18;
+  P0->P19;
+
+  // MPI_Bcast(B, col_comm): P0 вниз по левой колонке
+  edge [color="#228b22", penwidth=1.3, style=solid];
+  P0->P5  [label="bcast B"];  P5->P10;  P10->P15;
+
+  // MPI_Scatter(B, row_comm): каждый левый процесс раздаёт своей строке
+  edge [color="#e07b00", penwidth=1.3, style=solid];
+  P0->P1  [label="scatter B"]; P0->P2; P0->P3; P0->P4;
+  P5->P6;  P5->P7;  P5->P8;  P5->P9;
+  P10->P11; P10->P12; P10->P13; P10->P14;
+  P15->P16; P15->P17; P15->P18; P15->P19;
+
+  // ============================================================
+  // BOTTOM GRID: вычисление и сборка
+  // ============================================================
+
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.6, height=0.6, fixedsize=true, fontsize=9];
+
+  Q0  [label="P0",  pos="0,-2.5!"];
+  Q1  [label="P1",  pos="2.5,-2.5!"];
+  Q2  [label="P2",  pos="5,-2.5!"];
+  Q3  [label="P3",  pos="7.5,-2.5!"];
+  Q4  [label="P4",  pos="10,-2.5!"];
+
+  Q5  [label="P5",  pos="0,-5.7!"];
+  Q6  [label="P6",  pos="2.5,-5.7!"];
+  Q7  [label="P7",  pos="5,-5.7!"];
+  Q8  [label="P8",  pos="7.5,-5.7!"];
+  Q9  [label="P9",  pos="10,-5.7!"];
+
+  Q10 [label="P10", pos="0,-8.9!"];
+  Q11 [label="P11", pos="2.5,-8.9!"];
+  Q12 [label="P12", pos="5,-8.9!"];
+  Q13 [label="P13", pos="7.5,-8.9!"];
+  Q14 [label="P14", pos="10,-8.9!"];
+
+  Q15 [label="P15", pos="0,-12.1!"];
+  Q16 [label="P16", pos="2.5,-12.1!"];
+  Q17 [label="P17", pos="5,-12.1!"];
+  Q18 [label="P18", pos="7.5,-12.1!"];
+  Q19 [label="P19", pos="10,-12.1!"];
+
+  node [shape=box, style="rounded,filled", fillcolor="#d5f5d5",
+        width=1.8, height=0.75, fixedsize=true, fontsize=7];
+
+  R0  [label="C_{0,j}+=ΔC_{0,j}\n∀j∈{0,...,5}",        pos="0,-4.0!"];
+  R1  [label="ΔC_{0,j}=A_{0,1}·B_{1,j}\n∀j∈{0,...,5}", pos="2.5,-4.0!"];
+  R2  [label="ΔC_{0,j}=A_{0,2}·B_{2,j}\n∀j∈{0,...,5}", pos="5,-4.0!"];
+  R3  [label="ΔC_{0,j}=A_{0,3}·B_{3,j}\n∀j∈{0,...,5}", pos="7.5,-4.0!"];
+  R4  [label="ΔC_{0,j}=A_{0,4}·B_{4,j}\n∀j∈{0,...,5}", pos="10,-4.0!"];
+
+  R5  [label="C_{1,j}+=ΔC_{1,j}\n∀j∈{0,...,5}",        pos="0,-7.2!"];
+  R6  [label="ΔC_{1,j}=A_{1,1}·B_{1,j}\n∀j∈{0,...,5}", pos="2.5,-7.2!"];
+  R7  [label="ΔC_{1,j}=A_{1,2}·B_{2,j}\n∀j∈{0,...,5}", pos="5,-7.2!"];
+  R8  [label="ΔC_{1,j}=A_{1,3}·B_{3,j}\n∀j∈{0,...,5}", pos="7.5,-7.2!"];
+  R9  [label="ΔC_{1,j}=A_{1,4}·B_{4,j}\n∀j∈{0,...,5}", pos="10,-7.2!"];
+
+  R10 [label="C_{2,j}+=ΔC_{2,j}\n∀j∈{0,...,5}",        pos="0,-10.4!"];
+  R11 [label="ΔC_{2,j}=A_{2,1}·B_{1,j}\n∀j∈{0,...,5}", pos="2.5,-10.4!"];
+  R12 [label="ΔC_{2,j}=A_{2,2}·B_{2,j}\n∀j∈{0,...,5}", pos="5,-10.4!"];
+  R13 [label="ΔC_{2,j}=A_{2,3}·B_{3,j}\n∀j∈{0,...,5}", pos="7.5,-10.4!"];
+  R14 [label="ΔC_{2,j}=A_{2,4}·B_{4,j}\n∀j∈{0,...,5}", pos="10,-10.4!"];
+
+  R15 [label="C_{3,j}+=ΔC_{3,j}\n∀j∈{0,...,5}",        pos="0,-13.6!"];
+  R16 [label="ΔC_{3,j}=A_{3,1}·B_{1,j}\n∀j∈{0,...,5}", pos="2.5,-13.6!"];
+  R17 [label="ΔC_{3,j}=A_{3,2}·B_{2,j}\n∀j∈{0,...,5}", pos="5,-13.6!"];
+  R18 [label="ΔC_{3,j}=A_{3,3}·B_{3,j}\n∀j∈{0,...,5}", pos="7.5,-13.6!"];
+  R19 [label="ΔC_{3,j}=A_{3,4}·B_{4,j}\n∀j∈{0,...,5}", pos="10,-13.6!"];
+
+  edge [color=gray, penwidth=0.6, style=dotted, arrowsize=0.5, arrowhead=normal];
+  Q0->R0;   Q1->R1;   Q2->R2;   Q3->R3;   Q4->R4;
+  Q5->R5;   Q6->R6;   Q7->R7;   Q8->R8;   Q9->R9;
+  Q10->R10; Q11->R11; Q12->R12; Q13->R13; Q14->R14;
+  Q15->R15; Q16->R16; Q17->R17; Q18->R18; Q19->R19;
+
+  edge [color=red, penwidth=1.5, style=solid, arrowsize=0.6];
+  Q1->Q0 [label="reduce"]; Q2->Q0; Q3->Q0; Q4->Q0;
+  Q6->Q5;  Q7->Q5;  Q8->Q5;  Q9->Q5;
+  Q11->Q10; Q12->Q10; Q13->Q10; Q14->Q10;
+  Q16->Q15; Q17->Q15; Q18->Q15; Q19->Q15;
+
+  edge [color=purple, penwidth=1.8, style=solid, arrowsize=0.6];
+  Q5->Q0 [label="gather"]; Q10->Q0; Q15->Q0;
+}
+@enddot

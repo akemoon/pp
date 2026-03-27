@@ -1,0 +1,54 @@
+@startdot
+digraph MatMulV1 {
+  graph [layout=neato, splines=ortho, bgcolor=white, overlap=false];
+  node  [fontsize=8];
+  edge  [fontsize=7, arrowsize=0.55];
+
+  node [shape=box, style="rounded,filled", fillcolor="#d5f5d5",
+        width=2.0, height=0.9, fixedsize=true];
+
+  D0 [label="A_{0,*} от P0\nB_{*,j} от P0\n∀j∈{0,...,5}", pos="0,4!"];
+  D1 [label="A_{1,*} от P0\nB_{*,j} от P0\n∀j∈{0,...,5}", pos="3,4!"];
+  D2 [label="A_{2,*} от P0\nB_{*,j} от P0\n∀j∈{0,...,5}", pos="6,4!"];
+  D3 [label="A_{3,*} от P0\nB_{*,j} от P0\n∀j∈{0,...,5}", pos="9,4!"];
+
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.6, height=0.6, fixedsize=true, fontsize=9];
+
+  P0 [label="P0", pos="0,2.5!"];
+  P1 [label="P1", pos="3,2.5!"];
+  P2 [label="P2", pos="6,2.5!"];
+  P3 [label="P3", pos="9,2.5!"];
+
+  node [shape=box, style="rounded,filled", fillcolor="#d5f5d5",
+        width=2.0, height=0.9, fixedsize=true, fontsize=7];
+
+  R0 [label="C_{0,j}=Σ A_{0,k}·B_{k,j}\n∀j∈{0,...,5}", pos="0,1!"];
+  R1 [label="C_{1,j}=Σ A_{1,k}·B_{k,j}\n∀j∈{0,...,5}", pos="3,1!"];
+  R2 [label="C_{2,j}=Σ A_{2,k}·B_{k,j}\n∀j∈{0,...,5}", pos="6,1!"];
+  R3 [label="C_{3,j}=Σ A_{3,k}·B_{k,j}\n∀j∈{0,...,5}", pos="9,1!"];
+
+  // бокс -> процесс -> результат
+  edge [color=gray, penwidth=0.6, style=dotted, arrowsize=0.5, arrowhead=normal];
+  D0->P0; D1->P1; D2->P2; D3->P3;
+  P0->R0; P1->R1; P2->R2; P3->R3;
+
+  // MPI_Scatter(A): P0 раздаёт строки A
+  edge [color=blue, penwidth=1.3, style=solid, arrowsize=0.9, arrowhead=normal];
+  P0->P1 [label="scatter A", fontcolor=blue, fontsize=10];
+  P0->P2;
+  P0->P3;
+
+  // MPI_Bcast(B): P0 рассылает B всем
+  edge [color="#228b22", penwidth=1.3, style=solid];
+  P0->P1 [label="bcast B", fontcolor="#228b22", fontsize=10];
+  P0->P2;
+  P0->P3;
+
+  // MPI_Gather: все отправляют строку C к P0
+  edge [color=purple, penwidth=1.8, style=solid, arrowsize=0.6];
+  P1->P0 [label="gather", fontcolor=purple, fontsize=10];
+  P2->P0;
+  P3->P0;
+}
+@enddot

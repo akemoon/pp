@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     // Получаем общее количество процессов в коммуникаторе.
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    // ======================= MPI_Comm_split =======================
+    // MPI_Comm_split
     // Создаёт отдельный коммуникатор только для машин (rank > 0).
     // Арбитр попадает в свою группу (color=0), машины в свою (color=1).
     // Нужно чтобы MPI_Barrier срабатывал только между машинами.
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
     //   2) rank != 0      - (IN)  color - 0 для арбитра, 1 для машин
     //   3) rank           - (IN)  key - порядок рангов внутри новой группы
     //   4) &cars_comm     - (OUT) новый коммуникатор
-    // ==============================================================
+    //
     MPI_Comm cars_comm {};
     MPI_Comm_split(MPI_COMM_WORLD, rank != 0, rank, &cars_comm);
 
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
             std::cout << "Подготовка этапа " << stage << "\n";
             sleep(1);
 
-            // ======================= MPI_Bcast =======================
+            // MPI_Bcast
             // Рассылает сигнал старта всем машинам - аналог kill(-group, SIGUSR1) из lab2.
             // Параметры:
             //   1) &signal      - (IN/OUT) буфер: на root - источник, на остальных - приёмник
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
             //   3) MPI_INT      - (IN)     тип элементов
             //   4) 0            - (IN)     root - кто рассылает
             //   5) MPI_COMM_WORLD - (IN)   коммуникатор
-            // =========================================================
+            //
             int signal { 1 };
             MPI_Bcast(&signal, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
             {
                 int dummy {};
 
-                // ======================= MPI_Gather =======================
+                // MPI_Gather
                 // Собирает позиции от всех машин - аналог msgrcv из lab2.
                 // После вызова positions[i+1] содержит позицию машины с rank i+1.
                 // Параметры:
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
                 //   6) MPI_INT         - (IN)  тип элементов
                 //   7) 0               - (IN)  root - кто собирает
                 //   8) MPI_COMM_WORLD  - (IN)  коммуникатор
-                // =========================================================
+                //
                 MPI_Gather(&dummy, 1, MPI_INT,
                            positions.data(), 1, MPI_INT,
                            0, MPI_COMM_WORLD);
@@ -231,12 +231,12 @@ int main(int argc, char** argv)
                     usleep(sleep_dist(gen) * 1000);
             }
 
-            // ======================= MPI_Barrier =======================
+            // MPI_Barrier
             // Удерживает все машины до тех пор пока каждая не завершит этап.
             // Арбитр не участвует - он в отдельном коммуникаторе (cars_comm).
             // Параметры:
             //   1) cars_comm - (IN) коммуникатор только машин
-            // ===========================================================
+            //
             MPI_Barrier(cars_comm);
         }
     }

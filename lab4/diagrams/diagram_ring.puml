@@ -1,0 +1,65 @@
+@startdot
+digraph RingMV {
+  graph [layout=neato, bgcolor=white, overlap=false, splines=ortho];
+  node  [fontsize=9];
+  edge  [fontsize=8, arrowsize=0.6];
+
+  // матрица (таблица строк)
+  MATRIX [shape=none, pos="0,4!", label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"
+           BGCOLOR="#e8f5e9">
+      <TR><TD WIDTH="70">строка 0</TD></TR>
+      <TR><TD>строка 1</TD></TR>
+      <TR><TD>строка 2</TD></TR>
+      <TR><TD>строка 3</TD></TR>
+      <TR><TD>строка 4</TD></TR>
+    </TABLE>>];
+
+  // вектор (таблица элементов)
+  VECTOR [shape=none, pos="2.2,4!", label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"
+           BGCOLOR="#e3f2fd">
+      <TR><TD WIDTH="30">M0</TD></TR>
+      <TR><TD>M1</TD></TR>
+      <TR><TD>M2</TD></TR>
+      <TR><TD>M3</TD></TR>
+      <TR><TD>M4</TD></TR>
+    </TABLE>>];
+
+  // процессы (вертикальная цепочка-кольцо)
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.9, height=0.9, fixedsize=true, fontsize=9];
+  P0 [label="П0", pos="5,8!"];
+  P1 [label="П1", pos="5,6!"];
+  P2 [label="П2", pos="5,4!"];
+  P3 [label="П3", pos="5,2!"];
+  P4 [label="П4", pos="5,0!"];
+
+  // точки для кольцевого замыкания (правая сторона)
+  node [shape=point, width=0.01, height=0.01, fixedsize=true, label=""];
+  RB [pos="7,0!"];
+  RT [pos="7,8!"];
+
+  // раздача строк матрицы пайплайном (зелёный)
+  edge [color="#228b22", penwidth=1.2, arrowsize=0.6, fontcolor="#228b22"];
+  MATRIX -> P0 [label="все строки"];
+  P0 -> P1 [label="стр.1..4"];
+  P1 -> P2 [label="стр.2..4"];
+  P2 -> P3 [label="стр.3,4"];
+  P3 -> P4 [label="стр.4"];
+
+  // раздача вектора пайплайном (оранжевый)
+  edge [color="#e65100", penwidth=1.2, arrowsize=0.6, fontcolor="#e65100"];
+  VECTOR -> P0 [label="M0..M4"];
+  P0 -> P1 [label="M1..M4"];
+  P1 -> P2 [label="M2..M4"];
+  P2 -> P3 [label="M3,M4"];
+  P3 -> P4 [label="M4"];
+
+  // кольцо (серый): замыкание P4 -> P0
+  edge [color="#444444", penwidth=1.2, arrowsize=0.6];
+  P4 -> RB [arrowhead=none];
+  RB -> RT [arrowhead=none];
+  RT -> P0;
+}
+@enddot

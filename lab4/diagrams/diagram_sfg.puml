@@ -1,0 +1,43 @@
+@startdot
+digraph SortSFG {
+  graph [layout=neato, bgcolor=white, overlap=false];
+  node  [fontsize=9];
+  edge  [fontsize=8, arrowsize=0.6];
+
+  // процессы
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.65, height=0.65, fixedsize=true];
+
+  P0 [label="P0", pos="0,4!"];
+  P1 [label="P1", pos="2.5,4!"];
+  P2 [label="P2", pos="5,4!"];
+  P3 [label="P3", pos="7.5,4!"];
+  P4 [label="P4", pos="10,4!"];
+
+  // self-loops: min сохраняется в каждом процессе (петля сверху)
+  edge [color="#555555", penwidth=1.2, style=solid, arrowsize=0.5, fontcolor="#555555"];
+  P0->P0 [label="min", tailport=ne, headport=nw];
+  P1->P1 [label="min", tailport=ne, headport=nw];
+  P2->P2 [label="min", tailport=ne, headport=nw];
+  P3->P3 [label="min", tailport=ne, headport=nw];
+  P4->P4 [label="min", tailport=ne, headport=nw];
+
+  // max течет вправо (синий)
+  edge [color=blue, penwidth=1.3, style=solid, arrowsize=0.7];
+  P0->P1 [label="max", fontcolor=blue];
+  P1->P2 [label="max", fontcolor=blue];
+  P2->P3 [label="max", fontcolor=blue];
+  P3->P4 [label="max", fontcolor=blue];
+
+  // входные значения снизу
+  node [shape=plaintext, fontsize=9, width=0, height=0, fixedsize=false];
+  V0 [label="a[0]", pos="0,2.8!",   fontcolor="#228b22"];
+  V1 [label="a[1]", pos="2.5,2.8!", fontcolor="#228b22"];
+  V2 [label="a[2]", pos="5,2.8!",   fontcolor="#228b22"];
+  V3 [label="a[3]", pos="7.5,2.8!", fontcolor="#228b22"];
+  V4 [label="a[4]", pos="10,2.8!",  fontcolor="#228b22"];
+
+  edge [color="#228b22", penwidth=1.1, style=solid, arrowsize=0.6];
+  V0->P0; V1->P1; V2->P2; V3->P3; V4->P4;
+}
+@enddot

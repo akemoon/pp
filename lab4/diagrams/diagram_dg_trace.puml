@@ -1,0 +1,80 @@
+@startdot
+digraph SortDGTrace {
+  graph [layout=neato, splines=ortho, bgcolor=white, overlap=false];
+  node  [fontsize=8];
+  edge  [fontsize=7, arrowsize=0.55];
+
+  // узлы-процессы (верхний треугольник)
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.55, height=0.55, fixedsize=true, fontsize=8];
+
+  P00 [label="0,0", pos="0,8!"];
+  P01 [label="0,1", pos="2,8!"];
+  P02 [label="0,2", pos="4,8!"];
+  P03 [label="0,3", pos="6,8!"];
+  P04 [label="0,4", pos="8,8!"];
+
+  P11 [label="1,1", pos="2,6!"];
+  P12 [label="1,2", pos="4,6!"];
+  P13 [label="1,3", pos="6,6!"];
+  P14 [label="1,4", pos="8,6!"];
+
+  P22 [label="2,2", pos="4,4!"];
+  P23 [label="2,3", pos="6,4!"];
+  P24 [label="2,4", pos="8,4!"];
+
+  P33 [label="3,3", pos="6,2!"];
+  P34 [label="3,4", pos="8,2!"];
+
+  P44 [label="4,4", pos="8,0!"];
+
+  // входной и выходной узлы
+  node [shape=box, style="rounded,filled", fillcolor="#fff2cc",
+        width=1.4, height=0.5, fixedsize=true, fontsize=8];
+  START [label="в начале\n{2,5,3,1,4}", pos="4,9.8!"];
+  END   [label="результат\n{1,2,3,4,5}", pos="0,10.5!"];
+
+  // раздача входных данных (зеленый)
+  edge [color="#228b22", penwidth=1.1, style=solid, arrowsize=0.6];
+  START->P00 [label="2", fontcolor="#228b22"];
+  START->P01 [label="5", fontcolor="#228b22"];
+  START->P02 [label="3", fontcolor="#228b22"];
+  START->P03 [label="1", fontcolor="#228b22"];
+  START->P04 [label="4", fontcolor="#228b22"];
+
+  // min течет вправо (синий)
+  edge [color=blue, penwidth=1.3, style=solid, arrowsize=0.6];
+  P00->P01 [label="2", fontcolor=blue];
+  P01->P02 [label="2", fontcolor=blue];
+  P02->P03 [label="2", fontcolor=blue];
+  P03->P04 [label="1", fontcolor=blue];
+  P11->P12 [label="5", fontcolor=blue];
+  P12->P13 [label="3", fontcolor=blue];
+  P13->P14 [label="2", fontcolor=blue];
+  P22->P23 [label="5", fontcolor=blue];
+  P23->P24 [label="3", fontcolor=blue];
+  P33->P34 [label="5", fontcolor=blue];
+
+  // max течет вниз (оранжевый)
+  edge [color=orange, penwidth=1.3, style=solid, arrowsize=0.6];
+  P01->P11 [label="5", fontcolor=orange];
+  P02->P12 [label="3", fontcolor=orange];
+  P03->P13 [label="2", fontcolor=orange];
+  P04->P14 [label="4", fontcolor=orange];
+  P12->P22 [label="5", fontcolor=orange];
+  P13->P23 [label="3", fontcolor=orange];
+  P14->P24 [label="4", fontcolor=orange];
+  P23->P33 [label="5", fontcolor=orange];
+  P24->P34 [label="4", fontcolor=orange];
+  P34->P44 [label="5", fontcolor=orange];
+
+  // сбор результата из последнего столбца (фиолетовый)
+  edge [color=purple, penwidth=1.5, style=dashed, arrowsize=0.6];
+  P04->P00 [label="1", fontcolor=purple];
+  P14->P00 [label="2", fontcolor=purple];
+  P24->P00 [label="3", fontcolor=purple];
+  P34->P00 [label="4", fontcolor=purple];
+  P44->P00 [label="5", fontcolor=purple];
+  P00->END;
+}
+@enddot

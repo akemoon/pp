@@ -1,0 +1,105 @@
+@startdot
+digraph SortSFGTrace {
+  graph [layout=neato, bgcolor=white, overlap=false, splines=ortho];
+  node  [fontsize=8];
+  edge  [fontsize=7, arrowsize=0.55];
+
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.7, height=0.7, fixedsize=true];
+
+  N00 [label="P0\nmin=2",  pos="0,8!"];
+  N01 [label="P1\nmin=oo", pos="2.5,8!"];
+  N02 [label="P2\nmin=oo", pos="5,8!"];
+  N03 [label="P3\nmin=oo", pos="7.5,8!"];
+  N04 [label="P4\nmin=oo", pos="10,8!"];
+
+  N10 [label="P0\nmin=2",  pos="0,6!"];
+  N11 [label="P1\nmin=5",  pos="2.5,6!"];
+  N12 [label="P2\nmin=oo", pos="5,6!"];
+  N13 [label="P3\nmin=oo", pos="7.5,6!"];
+  N14 [label="P4\nmin=oo", pos="10,6!"];
+
+  N20 [label="P0\nmin=2",  pos="0,4!"];
+  N21 [label="P1\nmin=3",  pos="2.5,4!"];
+  N22 [label="P2\nmin=5",  pos="5,4!"];
+  N23 [label="P3\nmin=oo", pos="7.5,4!"];
+  N24 [label="P4\nmin=oo", pos="10,4!"];
+
+  N30 [label="P0\nmin=1",  pos="0,2!"];
+  N31 [label="P1\nmin=2",  pos="2.5,2!"];
+  N32 [label="P2\nmin=3",  pos="5,2!"];
+  N33 [label="P3\nmin=5",  pos="7.5,2!"];
+  N34 [label="P4\nmin=oo", pos="10,2!"];
+
+  N40 [label="P0\nmin=1",  pos="0,0!"];
+  N41 [label="P1\nmin=2",  pos="2.5,0!"];
+  N42 [label="P2\nmin=3",  pos="5,0!"];
+  N43 [label="P3\nmin=4",  pos="7.5,0!"];
+  N44 [label="P4\nmin=5",  pos="10,0!"];
+
+  node [shape=plaintext, fontsize=8, width=0, height=0, fixedsize=false];
+  IT0 [label="i=0", pos="-1.3,8!"];
+  IT1 [label="i=1", pos="-1.3,6!"];
+  IT2 [label="i=2", pos="-1.3,4!"];
+  IT3 [label="i=3", pos="-1.3,2!"];
+  IT4 [label="i=4", pos="-1.3,0!"];
+  IT5 [label="сбор", pos="-1.3,-2!"];
+
+  node [shape=plaintext, fontsize=9, width=0, height=0, fixedsize=false];
+  IN0 [label="2", pos="-2.5,8!", fontcolor="#228b22"];
+  IN1 [label="5", pos="-2.5,6!", fontcolor="#228b22"];
+  IN2 [label="3", pos="-2.5,4!", fontcolor="#228b22"];
+  IN3 [label="1", pos="-2.5,2!", fontcolor="#228b22"];
+  IN4 [label="4", pos="-2.5,0!", fontcolor="#228b22"];
+
+  edge [color="#228b22", penwidth=1.1, arrowsize=0.6];
+  IN0->N00; IN1->N10; IN2->N20; IN3->N30; IN4->N40;
+
+  edge [color=gray, penwidth=0.8, style=dashed, arrowsize=0.4];
+  N00->N10; N10->N20; N20->N30; N30->N40;
+  N01->N11; N11->N21; N21->N31; N31->N41;
+  N02->N12; N12->N22; N22->N32; N32->N42;
+  N03->N13; N13->N23; N23->N33; N33->N43;
+  N04->N14; N14->N24; N24->N34; N34->N44;
+
+  edge [color=blue, penwidth=1.3, arrowsize=0.6, fontcolor=blue];
+  N10->N11 [label="5"];
+  N20->N21 [label="3"];
+  N21->N22 [label="5"];
+  N30->N31 [label="2"];
+  N31->N32 [label="3"];
+  N32->N33 [label="5"];
+  N40->N41 [label="4"];
+  N41->N42 [label="4"];
+  N42->N43 [label="4"];
+  N43->N44 [label="5"];
+
+  // строка сбора: все процессы присутствуют
+  node [shape=circle, style=filled, fillcolor="#cce5ff",
+        width=0.7, height=0.7, fixedsize=true];
+  P0col [label="P0\nmin=1", pos="0,-2!"];
+  P1col [label="P1\nmin=2", pos="2.5,-2!"];
+  P2col [label="P2\nmin=3", pos="5,-2!"];
+  P3col [label="P3\nmin=4", pos="7.5,-2!"];
+  P4col [label="P4\nmin=5", pos="10,-2!"];
+
+  // конец цикла: все переходят к фазе сбора
+  edge [color=gray, penwidth=0.8, style=dashed, arrowsize=0.4];
+  N40->P0col; N41->P1col; N42->P2col; N43->P3col; N44->P4col;
+
+  // P1..P4 шлют свой min к P0
+  edge [color=purple, penwidth=1.3, style=dashed, arrowsize=0.6, fontcolor=purple];
+  P1col->P0col [label="2"];
+  P2col->P0col [label="3"];
+  P3col->P0col [label="4"];
+  P4col->P0col [label="5"];
+
+  // P0 выводит результат
+  node [shape=box, style="rounded,filled", fillcolor="#fff2cc",
+        width=1.5, height=0.5, fixedsize=true, fontsize=8];
+  END [label="результат\n{1,2,3,4,5}", pos="0,-3.5!"];
+
+  edge [color=purple, penwidth=1.3, style=dashed, arrowsize=0.6];
+  P0col->END;
+}
+@enddot
